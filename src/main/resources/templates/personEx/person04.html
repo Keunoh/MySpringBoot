@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>link move</h2>
+    <div>
+        <a th:href="@{/personEx/person01}">사람 1번 가기</a>
+    </div>
+    <div>
+        <a th:href="@{https://www.daum.net/}">다음으로 가요</a>
+    </div>
+    <div>
+        <a th:href="@{/personEx/person05(param1='하잇', param2='바이')}">파라미터 전달</a>
+    </div>
+</body>
+</html>

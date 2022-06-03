@@ -12,7 +12,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "member")
 @Getter @Setter @ToString
-public class Member {
+// BaseEntity를 상속 받으면 누가 생성했는지 업데이트를 언제 했는지
+// 알 수 있게 해주려는 의도이다.
+public class Member extends BaseEntity {
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -16,6 +16,8 @@ public class CartItem {
     private Long id;
 
     // 제약조건 만들어주는 듯
+    // Many를 CartItem이라 생각하고
+    // One을 Cart라 생각하면 편하다.
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;

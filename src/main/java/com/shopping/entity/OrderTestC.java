@@ -3,6 +3,7 @@ package com.shopping.entity;
 import com.shopping.constant.ItemSellStatus;
 import com.shopping.repository.ItemRepository;
 import com.shopping.repository.MemberRepository;
+import com.shopping.repository.OrderItemRepository;
 import com.shopping.repository.OrderRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,12 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 
 @SpringBootTest
 @Transactional
-public class OrderTestB {
+public class OrderTestC {
     @Autowired
     ItemRepository itemRepository;
 
@@ -29,15 +31,30 @@ public class OrderTestB {
     @Autowired
     MemberRepository memberRepository;
 
+    @Autowired
+    OrderItemRepository orderItemRepository;
+
     @Test
-    @DisplayName("고아 객체 제거 테스트")
-    public void orphanRemovalTest(){
+    @DisplayName("지연 로딩 테스트")
+    public void LazyLoadingTest(){
         Order order = this.createOrder();
-        order.getOrderItems().remove(0); // 0번째 요소 제거하기
-        em.flush(); // 영속성 컨텍스트에 있는 내용을 데이터베이스에 반영시킵니다.
+
+        // 주문한 상품들 중에서 첫번째 상품의 아이디
+        Long orderItemId = order.getOrderItems().get(0).getId();
+
+        em.flush(); // 영속성 컨텍스트의 내용을 데이터 베이스에 반영하기
+        em.clear(); // 영속성 컨텍스트 상태 초기화
+
+        // 주문 상품 번호 orderItemId에 대하여 조회를 해보도록 한다.
+        OrderItem orderItem = orderItemRepository
+                            .findById(orderItemId)
+                            .orElseThrow(EntityNotFoundException::new);
+        System.out.println("Order Class : " + orderItem.getOrder().getClass());
+        System.out.println("===========================================");
+        orderItem.getOrder().getOrderDate();
+        System.out.println("===========================================");
     }
 
-    // 주문 데이터를 생성하고, 저장해주는 메소드
     private Order createOrder() {
         Order order = new Order();
         for (int i = 0; i < 3; i++) {

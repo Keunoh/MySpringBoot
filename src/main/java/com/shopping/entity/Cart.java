@@ -17,7 +17,7 @@ public class Cart { // 장바구니
 
     // 장바구니가 회원 Entitiy를 참조함
     // JoinColumn <- FK를 의미하는 듯
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id") // 나중에 FK됨
     private Member member;
 }

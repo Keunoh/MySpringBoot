@@ -19,7 +19,7 @@ public class Order {
     @Column(name = "order_id")
     private Long id;                    //
 
-    @ManyToOne  // 한사람은 여러개의 주문을 할 수 있다.
+    @ManyToOne(fetch = FetchType.LAZY)  // 한사람은 여러개의 주문을 할 수 있다.
     private Member member;              //
 
     private LocalDateTime orderDate;    // 주문 날짜
@@ -32,7 +32,7 @@ public class Order {
 
     // cascade = CascadeType.ALL : 부모 Entity의 영속성 상태 변화를
     // 자식 Entity에게 모두 전이한다.
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 }
 

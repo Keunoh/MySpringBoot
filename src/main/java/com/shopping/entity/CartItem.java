@@ -18,11 +18,11 @@ public class CartItem {
     // 제약조건 만들어주는 듯
     // Many를 CartItem이라 생각하고
     // One을 Cart라 생각하면 편하다.
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 

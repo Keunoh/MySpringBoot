@@ -6,12 +6,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "item") // name 속성은 실제 테이블 이름이 된다.
 @Getter @Setter @ToString
-public class Item {
+public class Item extends BaseEntity {
     @Id
     @Column(name = "item_id")
     // AUTO는 JPA 구현체가 자동으로 기본키 생성 전략을 결정
@@ -36,6 +35,6 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; // 상품 판매 상태
 
-    private LocalDateTime regTime; // 등록 시간
-    private LocalDateTime updateTime; // 수정 시간
+//    private LocalDateTime regTime; // 등록 시간
+//    private LocalDateTime updateTime; // 수정 시간
 }

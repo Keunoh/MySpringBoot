@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "cart")
 @Getter @Setter @ToString
-public class Cart { // 장바구니
+public class Cart extends BaseEntity { // 장바구니
     @Id
     @Column(name = "cart_id")
     @GeneratedValue(strategy = GenerationType.AUTO)

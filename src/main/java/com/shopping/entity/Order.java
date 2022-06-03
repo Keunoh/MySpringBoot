@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "orders")
 @Getter
 @Setter
-public class Order {
+public class Order extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "order_id")
@@ -27,8 +27,8 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;    // 주문 상태
 
-    private LocalDateTime regTime;      // 등록 시간
-    private LocalDateTime updateTime;   // 수정 시간
+//    private LocalDateTime regTime;      // 등록 시간
+//    private LocalDateTime updateTime;   // 수정 시간
 
     // cascade = CascadeType.ALL : 부모 Entity의 영속성 상태 변화를
     // 자식 Entity에게 모두 전이한다.

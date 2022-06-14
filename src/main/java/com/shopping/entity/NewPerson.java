@@ -7,21 +7,24 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "new")
-@Getter @Setter @ToString
+@Table(name = "Persons")
+@Getter
+@Setter
+@ToString
 public class NewPerson {
     @Id
-    @Column(name = "new_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    private String id ;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 30)
     private String name;
 
-    @Column(nullable = false, name = "address", length = 50)
+//    @Lob
+//    private String address;
+
+//    @Lob
+    @Column(nullable = true, length = 255)
     private String address;
 
     @Column(nullable = false)
-    private int salary;
+    private Integer salary ;
 }
-

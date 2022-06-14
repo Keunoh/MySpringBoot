@@ -17,17 +17,15 @@
         </tr>
         </thead>
         <tbody>
-        <!-- 반복문 사용법 (자바의 확장 for와 비슷) -->
         <tr th:each="itemDto, status: ${itemDtoList}">
-            <td th:if="${status.even}" th:text="짝수">짝수면 짝수라는 글을 표현</td>
-            <td th:unless="${status.even}" th:text="홀수">짝수가 아니라면 홀수라는 글을 표현</td>
+            <td th:if="${status.even}" th:text="짝수"></td>
+            <td th:unless="${status.even}" th:text="홀수"></td>
             <td th:text="${itemDto.itemNm}"></td>
             <td th:text="${itemDto.itemDetail}"></td>
-            <td th:text="${itemDto.regTime}"></td>
             <td th:text="${itemDto.price}"></td>
+            <td th:text="${itemDto.regTime}"></td>
         </tr>
         </tbody>
     </table>
-
 </body>
 </html>

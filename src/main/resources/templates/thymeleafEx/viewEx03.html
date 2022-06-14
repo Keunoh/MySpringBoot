@@ -17,16 +17,14 @@
         </tr>
         </thead>
         <tbody>
-        <!-- 반복문 사용법 (자바의 확장 for와 비슷) -->
         <tr th:each="itemDto, status: ${itemDtoList}">
             <td th:text="${status.index}"></td>
             <td th:text="${itemDto.itemNm}"></td>
             <td th:text="${itemDto.itemDetail}"></td>
-            <td th:text="${itemDto.regTime}"></td>
             <td th:text="${itemDto.price}"></td>
+            <td th:text="${itemDto.regTime}"></td>
         </tr>
         </tbody>
     </table>
-
 </body>
 </html>

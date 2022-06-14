@@ -1,54 +1,55 @@
 package com.shopping.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.shopping.constant.ItemSellStatus;
+import com.shopping.entity.Item;
+import lombok.Getter;
+import lombok.Setter;
+import org.modelmapper.ModelMapper;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import org.modelmapper.ModelMapper;
-
-import com.shopping.constant.ItemSellStatus;
-import com.shopping.entity.Item;
-
-import lombok.Getter;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter
-// 상품 데이터 정보를 전달해주는 dto 클래스
-public class ItemFormDto {  // 페이지 233
-
-    private Long id;
+public class ItemFormDto {
+    private Long id ;
 
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
-    private String itemNm;
+    private String itemNm ;
 
     @NotNull(message = "가격은 필수 입력 값입니다.")
-    private Integer price;
+    private Integer price ;
 
-    @NotBlank(message = "상품 상세는 필수 입력 값입니다.")
-    private String itemDetail;
+    @NotBlank(message = "상품 설명은 필수 입력 값입니다.")
+    private String itemDetail ;
 
-    @NotNull(message = "재고는 필수 입력 값입니다.")
-    private Integer stockNumber;
+    @NotNull(message = "재고 수량은 필수 입력 값입니다.")
+    private Integer stockNumber ;
 
-    private ItemSellStatus itemSellStatus;
+    private ItemSellStatus itemSellStatus ;
 
-    private List<ItemImgDto> itemImgDtoList = new ArrayList<>();
+    // 상품 등록시 첨부할 상품 이미지 정보들을 저장할 리스트 컬렉션입니다.(최대 5개 이미지)
+    private List<ItemImgDto> itemImgDtoList = new ArrayList<ItemImgDto>() ;
 
-    // 상품과 관련된 이미지들의 id를 저장할 용도로 사용하는 데, 수정하고자 할 때 id들을 저장할 용도로 사용합니다.
-    private List<Long> itemImgIds = new ArrayList<>(); // 상품 이미지 id 리스트 컬렉션
+    // 상품 수정시 해당 이미지들의 unique id 값을 저장할 리스트 컬렉션입니다.
+    private List<Long> itemImgIds = new ArrayList<Long>() ;
 
-    private static ModelMapper modelMapper = new ModelMapper();
+    private static ModelMapper modelMapper = new ModelMapper() ;
 
     public Item createItem(){
-    	// this(ItemFormDto) 객체를 Item 객체로 매핑시켜 줍니다. 
-        return modelMapper.map(this, Item.class);
+        return modelMapper.map(this, Item.class) ;
     }
 
     public static ItemFormDto of(Item item){
-    	// item(Item) 객체를 ItemFormDto 객체로 매핑시켜 줍니다.
         return modelMapper.map(item, ItemFormDto.class);
     }
 
 }
+
+
+
+
+
+
+

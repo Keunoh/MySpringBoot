@@ -1,6 +1,8 @@
 package com.shopping.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shopping.entity.NewPerson;
 import com.shopping.entity.QNewPerson;
 import org.junit.jupiter.api.DisplayName;
@@ -12,93 +14,133 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @SpringBootTest
 public class NewPersonRepositoryTest02 {
-
     @Autowired
     NewPersonRepository newPersonRepository;
 
     @Test
-    @DisplayName("회원 생성")
-    public void createPersonTest(){
-        String[] name = {"김시민", "이순신", "사명대사"};
-        String[] address = {"마포", "성북", "구로"};
-        int[] salary = {100, 200, 300};
+    @DisplayName("회원 여러명 생성하기")
+    void createNewPersonTest(){
+        String[] address = {"용산", "마포", "서대문", "금천"};
+        String[] name = {"김철수", "이민수", "박홍기"};
+        for (int i = 1; i <=10 ; i++) {
+            NewPerson person = new NewPerson();
+            person.setId("person" + i);
+            person.setName(name[i % name.length]);
+            person.setAddress(address[i % address.length]);
+            person.setSalary(100*i);
+            NewPerson savedData = newPersonRepository.save(person);
+            System.out.println(savedData.toString()) ;
+        }
+    }
 
-        for (int i = 1; i <= 10; i++) {
-            NewPerson bean = new NewPerson();
 
-            bean.setName(name[i % name.length]);
-            bean.setAddress(address[i % address.length]);
-            bean.setSalary(salary[i % salary.length]);
+    @Test
+    @DisplayName("이름순 정렬 테스트")
+    public void findByOrderByNameAsc(){
+        List<NewPerson> lists = newPersonRepository.findByOrderByNameAsc();
+        for(NewPerson person : lists){
+            System.out.println(person.toString()) ;
+        }
+    }
 
-            NewPerson savedPerson = newPersonRepository.save(bean);
-            System.out.println(savedPerson.toString());
+    /*
+2022-05-27 12:09:37.023 TRACE 9996 --- [           main] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [CLOB] - [마포]
+2022-05-27 12:09:37.027  WARN 9996 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 932, SQLState: 42000
+2022-05-27 12:09:37.028 ERROR 9996 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : ORA-00932: inconsistent datatypes: expected - got CLOB*/
+
+    @Test
+    @DisplayName("마포인 사람 조회")
+    public void findByAddressEquals(){
+        List<NewPerson> lists = newPersonRepository.findByAddressEquals("마포");
+        for(NewPerson person : lists){
+            System.out.println(person.toString()) ;
         }
     }
 
     @Test
-    @DisplayName("이름순으로 정렬하기")
-    public void findByNameOrderByNameDesc(){
-        List<NewPerson> lists = newPersonRepository.findByOrderByNameDesc();
-        for(NewPerson bean : lists){
-            System.out.println(bean.toString());
-        }
-    }
-
-    @Test
-    @DisplayName("주소가 마포인 경우")
-    public void findByAddress(){
-        List<NewPerson> lists = newPersonRepository.findByAddress("마포");
-        for(NewPerson bean : lists){
-            System.out.println(bean.toString());
-        }
-    }
-
-    @Test
-    @DisplayName("급여별로 테스트")
+    @DisplayName("고소득자 우선 정렬")
     public void findByOrderBySalaryDesc() {
         List<NewPerson> lists = newPersonRepository.findByOrderBySalaryDesc();
-        for (NewPerson bean : lists) {
-            System.out.println(bean.toString());
+        for(NewPerson person : lists){
+            System.out.println(person.toString()) ;
         }
     }
 
     @Test
-    @DisplayName("급여 테스트 2")
+    @DisplayName("@Query를 사용한 고액 연봉자 조회")
     public void findBySalary(){
-        List<NewPerson> lists = newPersonRepository.findBySalary(150);
-        for (NewPerson bean : lists) {
-            System.out.println(bean.toString());
+        List<NewPerson> newPersonList = newPersonRepository.findBySalary(500);
+        for(NewPerson newPerson : newPersonList){
+            System.out.println(newPerson.toString()) ;
+        }
+    }
+
+    @PersistenceContext // JPA가 동작하는 영속성 작업 구간
+    EntityManager em ; // 엔터티 관리자
+
+    @Test
+    @DisplayName("newperson query Dsl Test01")
+    public void newPersonDslTest01(){
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em) ;
+        QNewPerson qNewPerson = QNewPerson.newPerson ;
+        JPAQuery<NewPerson> query = queryFactory
+                .selectFrom(qNewPerson)
+                .where(qNewPerson.salary.lt(700))
+                .where(qNewPerson.address.like("%" + "포" + "%"))
+                .orderBy(qNewPerson.name.desc()) ;
+
+        List<NewPerson> newPersonList = query.fetch() ;
+        for(NewPerson bean : newPersonList){
+            System.out.println(bean.toString()) ;
         }
     }
 
     @Test
-    @DisplayName("페이징 테스트")
-    public void queryDslTest(){
-        String address = "포";
-        int salary = 50;
+    @DisplayName("create newperson data")
+    public void createNewPersonData(){
+        String[] address = {"용산", "마포", "서대문", "금천"};
+        int[] salary = {111, 222, 333, 444, 555};
 
-        // 이건 어디에씀 => 엔티티 가져오는거같음
-        QNewPerson bean = QNewPerson.newPerson;
+        for (int i = 1; i <= 30 ; i++) {
+            NewPerson newPerson = new NewPerson();
 
-        // where 절
+            newPerson.setId("myid" + i);
+            newPerson.setSalary(salary[i%salary.length]);
+            newPerson.setAddress(address[i%address.length]);
+            newPerson.setName("김철수" + (i*i));
+
+            newPersonRepository.save(newPerson);
+        }
+    }
+
+    @Test
+    @DisplayName("newperson query Dsl Test02")
+    public void newPersonDslTest02(){
+        String myaddress = "포" ;
+        int salary = 400 ;
+
+        QNewPerson newPerson = QNewPerson.newPerson ;
+
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(bean.salary.gt(salary));
-        booleanBuilder.and(bean.address.like("%" + address + "%"));
+        booleanBuilder.and(newPerson.address.like("%" + myaddress + "%")) ;
+        booleanBuilder.and(newPerson.salary.lt(salary)) ;
 
-        // 페이징
-        Pageable pageable = PageRequest.of(0, 2, Sort.by("name").descending());
+        // Sort.by("name").ascending(), Sort.by("name").descending()
+        Pageable pageable = PageRequest.of(1, 3, Sort.by("name").ascending()) ;
 
-        Page<NewPerson> personPagingResult
-                = newPersonRepository.findAll(booleanBuilder, pageable);
-        System.out.println("total elements : " + personPagingResult.getTotalElements());
+        Page<NewPerson> newPersonPagingResult
+                = newPersonRepository.findAll(booleanBuilder, pageable) ;
+        System.out.println("total elements : " + newPersonPagingResult.getTotalElements());
 
-        List<NewPerson> resultPersonList = personPagingResult.getContent();
-        for(NewPerson person : resultPersonList){
-            System.out.println(person);
+        List<NewPerson> resultNewPersonList = newPersonPagingResult.getContent() ;
+        for(NewPerson resultNewPerson : resultNewPersonList){
+            System.out.println(resultNewPerson.toString());
         }
     }
 }

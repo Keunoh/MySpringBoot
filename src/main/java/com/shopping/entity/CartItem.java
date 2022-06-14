@@ -8,23 +8,22 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "cart_item")
-@Getter @Setter @ToString
-public class CartItem extends BaseEntity {
+@Getter
+@Setter
+@ToString
+public class CartItem extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "cart_item_id")
-    private Long id;
-
-    // 제약조건 만들어주는 듯
-    // Many를 CartItem이라 생각하고
-    // One을 Cart라 생각하면 편하다.
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    private Long id ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @JoinColumn(name="cart_id")
+    private Cart cart ;
 
-    private int count;  // 주문 수량 개수
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="item_id")
+    private Item item ;
+
+    private int count ; // 주문 수량 갯수
 }

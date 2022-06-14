@@ -6,15 +6,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class PersonTestController {
-    @GetMapping(value = "/person/")
+    @GetMapping(value="/person")
     public Person test(){
         Person bean = new Person();
-
-        bean.setId("katlz");
-        bean.setName("keunoh");
-        bean.setAddress("my home");
-        bean.setSalary(1000);
-
-        return bean;
+        bean.setId("kim9");
+        bean.setName("김구");
+        bean.setAddress("마포구 공덕동");
+        bean.setSalary(10000);
+        return bean ;
     }
 }

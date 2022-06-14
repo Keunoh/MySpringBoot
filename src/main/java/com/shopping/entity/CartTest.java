@@ -14,46 +14,47 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 
 
+/*
+    멤버 객체를 생성합니다.
+*/
 @SpringBootTest
 @Transactional
 public class CartTest {
     @Autowired
-    PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder ;
 
-    // 멤버 객체 생성
-    private Member createMember(){
+    private Member createMember(){ // 멤버 객체 생성
         MemberFormDto memberFormDto = new MemberFormDto();
         memberFormDto.setEmail("test@email.com");
         memberFormDto.setAddress("서울시 마포구 공덕동");
         memberFormDto.setName("김현식");
         memberFormDto.setPassword("1234");
 
-        return Member.createMember(memberFormDto, passwordEncoder);
+        return Member.createMember(memberFormDto, passwordEncoder) ;
     }
 
     @Autowired
-    MemberRepository memberRepository;
+    MemberRepository memberRepository ;
 
     @Autowired
-    CartRepository cartRepository;
+    CartRepository cartRepository ;
 
     @Test
-    @DisplayName("장바구니 회원 엔티티 매핑 조회")
+    @DisplayName("장바구니 회원 엔터티 매핑 조회")
     public void findCartAndMemberTest(){
-        Member member = createMember();
-        memberRepository.save(member);
+        Member member = createMember() ;
+        memberRepository.save(member) ;
 
         Cart cart = new Cart();
         cart.setMember(member);
-        cartRepository.save(cart);
-
+        cartRepository.save(cart) ;
+        
         Cart savedCart = cartRepository.findById(cart.getId())
-                .orElseThrow(EntityNotFoundException::new);
+                            .orElseThrow(EntityNotFoundException::new);
+        
+        this.ShowCartInfo(savedCart) ;
 
-        this.ShowCartInfo(savedCart);
-
-        // 카트에 들어있는 멤버의 아이디와  실제 멤버 아이디 비교
-       Assertions.assertEquals(savedCart.getMember().getId(), member.getId());
+        Assertions.assertEquals(savedCart.getMember().getId(), member.getId());
     }
 
     private void ShowCartInfo(Cart savedCart) {

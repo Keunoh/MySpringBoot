@@ -8,9 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Employee {
-    private String id;
+    private String id ;
     private String name;
-    private Integer age;
-
-
+    private Integer age ;
 }
